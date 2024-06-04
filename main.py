@@ -9,9 +9,16 @@ def main():
     #defines the variable that stores the total word count of a given text
     charcount = get_char_count(text)
     #defines the variable that stores the total count of each unique character in a given text
+    aggregated = aggregate_char_count(charcount)
+    #defines the list that stores the set of dicts matching each letter to its count
 
-    print(wordcount)
-    print(charcount)
+    print(f"--- Begin report of {book_path} ---")
+    print(f"{wordcount} words found in the document")
+    for dict in aggregated:
+        char = dict["char"]
+        count = dict["count"]
+        print(f"The '{char}' character was found {count} times")
+    print("--- End report ---")
 
 
 def get_book_text(path):
@@ -38,5 +45,18 @@ def get_char_count(words):
             else:
                 charcount[letter] = 1
     return charcount
+
+def aggregate_char_count(charcount):
+    dictlist = []
+    aggregated = {}
+    for char in charcount:
+        aggregated = {"char":char,"count":charcount[char]}
+        if aggregated["char"].isalpha():
+            dictlist.append(aggregated)
+    def sortkey(aggregated):
+        return aggregated["count"]
+    dictlist.sort(reverse=True, key=sortkey)
+    return dictlist
+
 
 main()
